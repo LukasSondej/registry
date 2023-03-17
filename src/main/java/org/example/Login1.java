@@ -116,6 +116,7 @@ public class Login1 extends JFrame {
                                 ResultSet rs = st.executeQuery();
                                 if (rs.next()) {
                                     dispose();
+                                    ChoseClass choseClass = new ChoseClass();
 
 
                                     JOptionPane.showMessageDialog(btnNewButton, "You have successfully logged in");
