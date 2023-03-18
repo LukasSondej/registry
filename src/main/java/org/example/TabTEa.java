@@ -1,5 +1,6 @@
 package org.example;
 import javax.swing.*;
+import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.sql.*;
@@ -12,15 +13,18 @@ public class TabTEa extends JFrame {
     public TabTEa() {
         super("Teachers Table");
 
-        String[] columnNames = {"Name", "Email","Clas"};
+        String[] columnNames = {"Name", "Email","Klasa"};
         model = new DefaultTableModel(columnNames, 0);
         table = new JTable(model);
 
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane);
-
+        JPanel panel = new JPanel();
+        panel.setLayout(new BorderLayout(0,0));
+        panel.add(scrollPane, BorderLayout.WEST);
+        add(panel);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(400, 300);
+        setSize(800, 600);
         setLocationRelativeTo(null);
         setVisible(true);
 
@@ -32,12 +36,14 @@ public class TabTEa extends JFrame {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/diary3", "root", "Rafalek");
             Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT imie, email FROM nauczyciele");
+            ResultSet rs = stmt.executeQuery("SELECT imie, email, klasa FROM nauczyciele, klasy where nauczyciele.idklasy = klasy.idklasy");
             while (rs.next()) {
 
-                String name = rs.getString("name");
+                String name = rs.getString("imie");
                 String email = rs.getString("email");
-                Object[] row = {name, email};
+                String kl = rs.getString("klasa");
+
+                Object[] row = {name, email,kl};
                 model.addRow(row);
             }
             rs.close();
@@ -70,5 +76,11 @@ public class TabTEa extends JFrame {
 
     public static void main(String[] args) {
         new TabTEa();
+    }
+    public void addClastoteacher(){
+        
+
+
+
     }
 };;;;;;;;;;;;;;
