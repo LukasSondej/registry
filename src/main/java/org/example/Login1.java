@@ -115,8 +115,9 @@ public class Login1 extends JFrame {
                                 st.setString(2, password);
                                 ResultSet rs = st.executeQuery();
                                 if (rs.next()) {
-                                    dispose();
-                                    ChoseClass choseClass = new ChoseClass();
+
+                                    String thismail = textField.getText();
+                                    TeacherClass teacherClass = new TeacherClass(thismail);
 
 
                                     JOptionPane.showMessageDialog(btnNewButton, "You have successfully logged in");
@@ -141,6 +142,10 @@ public class Login1 extends JFrame {
         label.setBounds(0, 0, 1008, 562);
         contentPane.add(label);
     }
+
+
+
+
 }
 
 
