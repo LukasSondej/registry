@@ -96,7 +96,7 @@ public class Login1 extends JFrame {
                     ResultSet searchResult = searchPstmt.executeQuery();
 
                     if (searchResult.next()) {
-                        System.out.println("jkdsghskadg");
+                        ChoseClass choseClass = new ChoseClass();
                     } else {
                         int len = password.length();
                         if (len == 0) {

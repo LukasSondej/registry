@@ -2,7 +2,6 @@ package org.example;
 import com.mysql.cj.Query;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
@@ -10,7 +9,8 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class TeacherClass extends JFrame {
+public class AddingClassTeacher extends JFrame
+{
 
     JFrame frame = new JFrame();
     JButton clas1 = new JButton();
@@ -20,36 +20,31 @@ public class TeacherClass extends JFrame {
     JButton setting = new JButton();
     JButton button = new JButton();
     JPanel panel = new JPanel();
-    JComboBox<String> box = new JComboBox<>();
-    public Connection getConnect() {
+JTable table = new JTable();
+    public Connection getConnect(){
         Connection con = null;
-        try {
+        try{
             con = DriverManager.getConnection("jdbc:mysql://localhost:3306/diary3", "root", "Rafalek");
-        } catch (SQLException ex) {
-            Logger.getLogger(Query.class.getName()).log(Level.SEVERE, null, ex);
+        }catch(SQLException ex) {
+            Logger.getLogger(Query.class.getName()).log(Level.SEVERE,null,ex);
         }
-        return con;
+        return  con;
     }
-
- public TeacherClass(String thisemail) {
-
+   AddingClassTeacher(){
         ArrayList<String> lista = new ArrayList<>();
-
-
-
         try {
             Connection con = getConnect();
             Statement stmt = con.createStatement();
-            String querry = "select klasa from klasy, nauczyciele where klasy.idklasy = nauczyciele.idklasy and nauczyciele.email = '" + thisemail + "'";
-
+            String querry = "select klasa from klasy";
             ResultSet rs = stmt.executeQuery(querry);
 
-            while (rs.next()) {
+            while (rs.next()){
                 lista.add(rs.getString("klasa"));
             }
 
 
-        } catch (Exception e) {
+        }
+        catch (Exception e){
 
         }
 
@@ -58,18 +53,22 @@ public class TeacherClass extends JFrame {
             System.out.println(s);
         }
         int i = 0;
-        while (i < lista.size()) {
+        while (i<lista.size())
+        {
 
-            button = new JButton(lista.get(i));
-            button.setBounds(200, i * 100, 100, 100);
+           JTable table1 =  new JTable();
+            button.setBounds(200,i*100,100,100);
             panel.add(button);
             i++;
 
         }
 
 
+
+
+
         frame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        frame.setSize(600, 600);
+        frame.setSize(600,600);
         panel.setLayout(null);
         panel.add(clas1);
         panel.add(clas2);
@@ -80,41 +79,23 @@ public class TeacherClass extends JFrame {
         frame.setVisible(true);
 
 
+
         clas1.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent w) {
+            public void actionPerformed(ActionEvent w){
+
 
 
             }
         });
 
 
-    }
-
-
-    public void teachers() {
-
-
-
-
-        try {
-            Connection con = getConnect();
-            Statement stmt = con.createStatement();
-            String querry = "select imie from nauczyciele";
-            ResultSet rs = stmt.executeQuery(querry);
-
-            while (rs.next()){
-                box.addItem(rs.getString("student_name"));
-            }
-            box.setBounds(125, 50, 150, 20);
-            add(box);
-            setVisible(true);
-        }
-        catch (Exception e){
-
-        }
-
 
     }
+
+
+
+
+
 
 
 
