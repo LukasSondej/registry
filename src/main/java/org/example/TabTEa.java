@@ -84,25 +84,15 @@ allclass();
             JOptionPane.showMessageDialog(null, ex.getMessage());
         }
     }
+    public void changeclas(){
 
-    public void removeSelectedRows() {
-        int[] rows = table.getSelectedRows();
-        for (int i = rows.length - 1; i >= 0; i--) {
-            String email = (String) table.getValueAt(rows[i], 0);
 
-            try {
-                Connection con = getConnect();
-                PreparedStatement stmt = con.prepareStatement("DELETE FROM naczyciele WHERE email = ?");
-                stmt.setString(1, email);
-                stmt.executeUpdate();
-                stmt.close();
-                con.close();
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(null, ex.getMessage());
-            }
-            model.removeRow(rows[i]);
-        }
+
+
+
     }
+
+
 
     public static void main(String[] args) {
         new TabTEa();

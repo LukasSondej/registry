@@ -4,6 +4,8 @@ import com.mysql.cj.Query;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -47,6 +49,13 @@ public class AddingClassTeacher extends JFrame {
         buttonadd.setBounds(450, 300, 100, 30);
         mainPanel.add(buttonadd);
 
+        buttonadd.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent w){
+
+addclastoteacher();
+
+            }
+        });
 
 
         getContentPane().add(mainPanel);
@@ -96,5 +105,73 @@ public class AddingClassTeacher extends JFrame {
             JOptionPane.showMessageDialog(null, e.getMessage());
         }
     }
+    public void addclastoteacher() {
+        int[] selectedrows = table.getSelectedRows();
+        if(selectedrows.length == 0) {
+            JOptionPane.showMessageDialog(buttonadd, "Select teacher");
+        }
+            else {
+                try{
+                    String klasawybrana = box2.getSelectedItem().toString();
+                   int rekordwybrany = table.getSelectedRow();
+                  String clas = table.getValueAt(rekordwybrany, 2).toString();
+                   if(rekordwybrany != -1){
 
-}
+                       for(int i = 0;i<table.getRowCount();i++){
+                           if(i == rekordwybrany){
+                               continue;
+                           }
+                           Object klasaznaleziona = table.getValueAt(i,2);
+                            if(klasaznaleziona.toString().equals(clas)){
+                                System.out.println("rekord"+i+"ta sama");
+                            }
+
+                       }
+                   }
+
+
+
+
+                try {
+                    Connection con = getConnect();
+                    int selectedRow = table.getSelectedRow();
+                    String imieNauczyciela = table.getValueAt(selectedRow, 0).toString();
+                    String emailNauczyciela = table.getValueAt(selectedRow, 1).toString();
+                    String klasa = table.getValueAt(selectedRow, 2).toString();
+
+                    String query = "SELECT idklasy FROM nauczyciele WHERE email = ?";
+                    PreparedStatement preparedStatement = con.prepareStatement(query);
+                    preparedStatement.setString(1, emailNauczyciela);
+                    ResultSet resultSet = preparedStatement.executeQuery();
+
+                    if (resultSet.next()) {
+                        try {
+                            String nazwaklasy = box2.getSelectedItem().toString();
+                            String idKlasy = resultSet.getString("idklasy");
+                            String updateQuery = "UPDATE klasy SET klasa = ? WHERE idklasy = ?";
+                            PreparedStatement updateStatement = con.prepareStatement(updateQuery);
+                            updateStatement.setString(1, nazwaklasy);
+                            updateStatement.setString(2, idKlasy);
+                            updateStatement.executeUpdate();
+
+
+                        } catch (Exception ex1) {
+                            JOptionPane.showMessageDialog(null, ex1.getMessage());
+                        }
+
+
+                    }
+                }catch (Exception ex2) {
+                    JOptionPane.showMessageDialog(null, ex2.getMessage());
+                }
+
+
+                }catch (Exception ex3) {
+                    JOptionPane.showMessageDialog(null, ex3.getMessage());
+                }
+
+
+        }
+        }
+    }
+
