@@ -20,6 +20,9 @@ public class TeacherClass extends JFrame {
     JButton setting = new JButton();
     JButton button = new JButton();
     JPanel panel = new JPanel();
+
+    String choseClas = "";
+
     JComboBox<String> box = new JComboBox<>();
     public Connection getConnect() {
         Connection con = null;
@@ -40,7 +43,7 @@ public class TeacherClass extends JFrame {
         try {
             Connection con = getConnect();
             Statement stmt = con.createStatement();
-            String querry = "select klasa from klasy, nauczyciele where klasy.idklasy = nauczyciele.idklasy and nauczyciele.email = '" + thisemail + "'";
+            String querry = "select klasa from klasy, nauczyciele, nauczyciel_klasa where klasy.idklasy = nauczyciel_klasa.id_klasy and nauczyciele.idnauczyciela = nauczyciel_klasa.id_nauczyciela and nauczyciele.email = '" + thisemail + "'";
 
             ResultSet rs = stmt.executeQuery(querry);
 
@@ -63,7 +66,17 @@ public class TeacherClass extends JFrame {
             button = new JButton(lista.get(i));
             button.setBounds(200, i * 100, 100, 100);
             panel.add(button);
+            button.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent w) {
+                    System.out.println("dziala");
+
+                    choseClas = button.getText();
+                    System.out.println(choseClas);
+
+                }
+            });
             i++;
+
 
         }
 
@@ -80,12 +93,7 @@ public class TeacherClass extends JFrame {
         frame.setVisible(true);
 
 
-        clas1.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent w) {
 
-
-            }
-        });
 
 
     }
