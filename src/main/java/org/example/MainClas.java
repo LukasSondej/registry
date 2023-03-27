@@ -36,17 +36,18 @@ public class MainClas extends JFrame  {
     JTextField newgrade = new JTextField();
     JTextField updatemarktext = new JTextField();
     private JComboBox comboBoxname;
+    public String przedmiot;
     public Connection getConnect(){
         Connection con = null;
         try{
-            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/diary2", "root", "Rafalek");
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/diary3", "root", "Rafalek");
         }catch(SQLException ex) {
             Logger.getLogger(Query.class.getName()).log(Level.SEVERE,null,ex);
         }
         return  con;
     }
 
-    MainClas(){
+   MainClas(String klasa, String przedmiot){
 
         setLocationRelativeTo(null);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -65,8 +66,8 @@ public class MainClas extends JFrame  {
         add(subjects);
         add(agreebutton);
 
-        name();
-        subjectchose();
+        name(klasa);
+        subjectchose(przedmiot);
         agreebutton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 
@@ -83,7 +84,7 @@ public class MainClas extends JFrame  {
 
 
     }
-    public void name() {
+    public void name(String klasa) {
 
 
 
@@ -91,11 +92,11 @@ public class MainClas extends JFrame  {
         try {
             Connection con = getConnect();
             Statement stmt = con.createStatement();
-            String querry = "select imie from uczniowie, nauczyciele, nauczyciel_klasa where uczniowie.id_klasy = nauczyciel_klasa.id_klasy and nauczyciele.idnauczyciela = nauczyciel_klasa.id_nauczyciela and nauczyciele.email ";
+            String querry = "select imie from uczniowie, uczen_klasa, klasy where uczniowie.id_klasy = uczen_klasa.id_klasy and klasy.idklasy = uczen_klasa.id_klasy and klasy.klasa = '" + klasa + "'";
             ResultSet rs = stmt.executeQuery(querry);
 
             while (rs.next()){
-                box.addItem(rs.getString("student_name"));
+                box.addItem(rs.getString("imie"));
             }
             box.setBounds(125, 50, 150, 20);
             add(box);
@@ -108,16 +109,16 @@ public class MainClas extends JFrame  {
 
     }
 
-    public void subjectchose(){
+    public void subjectchose(String przedmiot){
 
         try {
             Connection con = getConnect();
             Statement stmt = con.createStatement();
-            String querry = "select type from school_subject";
+            String querry = "select przedmiot from przedmioty where przedmiot = '" + przedmiot+ "'";
             ResultSet rs = stmt.executeQuery(querry);
 
             while (rs.next()){
-                box2.addItem(rs.getString("type"));
+                box2.addItem(rs.getString("przedmiot"));
             }
             box2.setBounds(500, 50, 150, 20);
             add(box2);
@@ -290,5 +291,6 @@ public class MainClas extends JFrame  {
         }
 
     }
+
 }
 

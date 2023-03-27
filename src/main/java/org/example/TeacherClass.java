@@ -1,129 +1,78 @@
 package org.example;
 import com.mysql.cj.Query;
 
-import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
-public class TeacherClass extends JFrame {
+public class TeacherClass extends JFrame implements ActionListener {
 
-    JFrame frame = new JFrame();
-    JButton clas1 = new JButton();
-    JButton clas2 = new JButton();
-    JButton clas3 = new JButton();
-
-    JButton setting = new JButton();
-    JButton button = new JButton();
-    JPanel panel = new JPanel();
-
-    String choseClas = "";
-
-    JComboBox<String> box = new JComboBox<>();
-    public Connection getConnect() {
+    private static final long serialVersionUID = 1L;
+public String przedmiot;
+    JPanel panel;
+    ArrayList<String> klasy;
+    public Connection getConnect(){
         Connection con = null;
-        try {
+        try{
             con = DriverManager.getConnection("jdbc:mysql://localhost:3306/diary3", "root", "Rafalek");
-        } catch (SQLException ex) {
-            Logger.getLogger(Query.class.getName()).log(Level.SEVERE, null, ex);
+        }catch(SQLException ex) {
+            Logger.getLogger(Query.class.getName()).log(Level.SEVERE,null,ex);
         }
-        return con;
+        return  con;
     }
-
- public TeacherClass(String thisemail) {
-
-        ArrayList<String> lista = new ArrayList<>();
-
-
+    public TeacherClass(String thisemail) {
+        klasy = new ArrayList<String>();
 
         try {
             Connection con = getConnect();
             Statement stmt = con.createStatement();
-            String querry = "select klasa from klasy, nauczyciele, nauczyciel_klasa where klasy.idklasy = nauczyciel_klasa.id_klasy and nauczyciele.idnauczyciela = nauczyciel_klasa.id_nauczyciela and nauczyciele.email = '" + thisemail + "'";
-
-            ResultSet rs = stmt.executeQuery(querry);
-
+            ResultSet rs = stmt.executeQuery("select klasa from klasy, nauczyciele, nauczyciel_klasa where klasy.idklasy = nauczyciel_klasa.id_klasy and nauczyciele.idnauczyciela = nauczyciel_klasa.id_nauczyciela and nauczyciele.email = '" + thisemail + "'");
             while (rs.next()) {
-                lista.add(rs.getString("klasa"));
+                klasy.add(rs.getString(1));
             }
-
-
+            con.close();
         } catch (Exception e) {
-
+            System.out.println(e);
         }
 
-        for (int i = 0; i < lista.size(); i++) {
-            String s = lista.get(i);
-            System.out.println(s);
-        }
-        int i = 0;
-        while (i < lista.size()) {
-
-            button = new JButton(lista.get(i));
-            button.setBounds(200, i * 100, 100, 100);
+        panel = new JPanel();
+        for(int i = 0;i<klasy.size();i++){
+            JButton button = new JButton(klasy.get(i));
+            button.addActionListener(this);
+            button.setBounds(350,i*100,100,100);
             panel.add(button);
-            button.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent w) {
-                    System.out.println("dziala");
-
-                    choseClas = button.getText();
-                    System.out.println(choseClas);
-
-                }
-            });
-            i++;
-
-
         }
 
-
-        frame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        frame.setSize(600, 600);
         panel.setLayout(null);
-        panel.add(clas1);
-        panel.add(clas2);
-        panel.add(clas3);
-        panel.add(setting);
-        frame.add(panel);
-        panel.setVisible(true);
-        frame.setVisible(true);
+        add(panel);
+        setTitle("Klasy");
+        setSize(700, 600);
+        setResizable(true);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setVisible(true);
+    }
 
+    @Override
+    public void actionPerformed(ActionEvent e) {
 
+        JButton button = (JButton) e.getSource();
+        String klasa = button.getText();
 
+        MainClas clas = new MainClas(klasa,przedmiot);
+        System.out.println(przedmiot);
+    }
+    public void setprzedmiot(String przedmiot){
+        this.przedmiot = przedmiot;
 
 
     }
-
-
-    public void teachers() {
-
-
-
-
-        try {
-            Connection con = getConnect();
-            Statement stmt = con.createStatement();
-            String querry = "select imie from nauczyciele";
-            ResultSet rs = stmt.executeQuery(querry);
-
-            while (rs.next()){
-                box.addItem(rs.getString("student_name"));
-            }
-            box.setBounds(125, 50, 150, 20);
-            add(box);
-            setVisible(true);
-        }
-        catch (Exception e){
-
-        }
-
-
-    }
-
 
 
 }
