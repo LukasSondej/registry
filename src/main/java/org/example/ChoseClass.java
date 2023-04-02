@@ -60,6 +60,7 @@ public String email;
         setResizable(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
+        
     }
 
     @Override
