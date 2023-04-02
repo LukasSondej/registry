@@ -15,7 +15,8 @@ import javax.swing.SwingUtilities;
 public class ChoseClass extends JFrame implements ActionListener {
 
     private static final long serialVersionUID = 1L;
-private String email;
+public String email;
+    public String przedmiot;
     JPanel panel;
     ArrayList<String> klasy;
     public Connection getConnect(){
@@ -27,7 +28,7 @@ private String email;
         }
         return  con;
     }
-    public ChoseClass() {
+    public ChoseClass(String email) {
         klasy = new ArrayList<String>();
 
         try {
@@ -64,8 +65,8 @@ private String email;
 
         JButton button = (JButton) e.getSource();
         String klasa = button.getText();
-
-        MainClas clas = new MainClas(klasa, email);
+setEmail(email);
+        MainClas clas = new MainClas(klasa, email, przedmiot);
 
     }
     public void setEmail(String email){

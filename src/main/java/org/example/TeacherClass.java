@@ -16,6 +16,7 @@ public class TeacherClass extends JFrame implements ActionListener {
 
     private static final long serialVersionUID = 1L;
 public String przedmiot;
+public String email;
     JPanel panel;
     ArrayList<String> klasy;
     public Connection getConnect(){
@@ -65,7 +66,7 @@ public String przedmiot;
         JButton button = (JButton) e.getSource();
         String klasa = button.getText();
 
-        MainClas clas = new MainClas(klasa,przedmiot);
+        MainClas clas = new MainClas(klasa,email,przedmiot);
         System.out.println(przedmiot);
     }
     public void setprzedmiot(String przedmiot){
@@ -73,6 +74,10 @@ public String przedmiot;
 
 
     }
+    public void setemail(String email){
+        this.email = email;
 
+
+    }
 
 }

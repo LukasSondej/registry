@@ -47,7 +47,7 @@ public class MainClas extends JFrame  {
         return  con;
     }
 
-   MainClas(String klasa, String przedmiot){
+   MainClas(String klasa, String email, String przedmiot){
 
         setLocationRelativeTo(null);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -67,7 +67,7 @@ public class MainClas extends JFrame  {
         add(agreebutton);
 
         name(klasa);
-        subjectchose(przedmiot);
+        subjectchose(przedmiot, email);
         agreebutton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 
@@ -109,10 +109,27 @@ public class MainClas extends JFrame  {
 
     }
 
-    public void subjectchose(String przedmiot){
+    public void subjectchose(String przedmiot, String email){
 
         try {
             Connection con = getConnect();
+            String searchQuery = "Select email from admin where email = '" + email + "'";
+            PreparedStatement searchPstmt = con.prepareStatement(searchQuery);
+            ResultSet searchResult = searchPstmt.executeQuery();
+if(searchResult.next()){
+    String querry = "select przedmiot from przedmioty";
+    Statement stmt = con.createStatement();
+    ResultSet rs2 = stmt.executeQuery(querry);
+            while (rs2.next()){
+                box2.addItem(rs2.getString("przedmiot"));
+            }
+            box2.setBounds(500, 50, 150, 20);
+            add(box2);
+            setVisible(true);
+
+            } else
+        try {
+
             Statement stmt = con.createStatement();
             String querry = "select przedmiot from przedmioty where przedmiot = '" + przedmiot+ "'";
             ResultSet rs = stmt.executeQuery(querry);
@@ -128,7 +145,10 @@ public class MainClas extends JFrame  {
 
         }
 
+        }
+        catch (Exception e){
 
+        }
     }
 
 

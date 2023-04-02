@@ -10,12 +10,16 @@ import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 public class AddClassToTeacher extends JFrame {
-    JButton agreebutton,dropclasofteacher, addbutton;
+    JButton agreebutton,dropclasofteacher, addbutton, change_subject;
     private JTable table;
+    private JLabel sub_teachers;
     private DefaultTableModel model;
     private JComboBox<String> box2 = new JComboBox<>();
     private JButton buttonadd = new JButton("Add class");
     JComboBox<String> box = new JComboBox<>();
+    JComboBox<String> box3 = new JComboBox<>();
+    JComboBox<String> box4 = new JComboBox<>();
+    JComboBox<String> box5 = new JComboBox<>();
     JPanel mainPanel = new JPanel(null);
     public Connection getConnect() {
         Connection con = null;
@@ -47,25 +51,37 @@ public class AddClassToTeacher extends JFrame {
         mainPanel.add(scrollPane);
 
 
-        agreebutton = new JButton("submit");
-        agreebutton.setBounds(500,20,150,20);
+        agreebutton = new JButton("Submit");
+        agreebutton.setBounds(800,20,150,20);
         mainPanel.add(agreebutton);
 
 
 
         getContentPane().add(mainPanel);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(800, 700);
+        setSize(1200, 700);
         setLocationRelativeTo(null);
         setVisible(true);
 
-        classesad();
-actionading();
+
+
 
         agreebutton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent w){
+                int rekordwybrany = table.getSelectedRow();
+                if(rekordwybrany == -1){
+                    JOptionPane.showMessageDialog(agreebutton, "Select Teacher" );
+                }else
 
-classes();
+                    subjects();
+       
+
+                classesad();
+
+                    actionading();
+                    classes();
+
+
 
 
             }
@@ -170,20 +186,18 @@ classes();
             while (rs.next()) {
                 box2.addItem(rs.getString("klasa"));
             }
-            box2.setBounds(450, 300, 100, 30);
+            box2.setBounds(530, 250, 100, 30);
             mainPanel.add(box2);
             setVisible(true);
-            rs.close();
-            stmt.close();
-            con.close();
+
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e.getMessage());
         }
     }
 
     public void actionading() {
-        addbutton = new JButton("submit");
-        addbutton.setBounds(570, 300, 100, 30);
+        addbutton = new JButton("add_class");
+        addbutton.setBounds(640, 250, 100, 30);
         mainPanel.add(addbutton);
         boolean warunek = false;
         addbutton.addActionListener(new ActionListener() {
@@ -223,14 +237,107 @@ classes();
 
         });
         }
-        public void Sprwdzklase(){
+    public void subjects() {
+       sub_teachers = new JLabel("subject");
+        sub_teachers.setFont(new Font("Tahoma", Font.PLAIN, 22));
+        sub_teachers.setBounds(900, 40, 100, 40);
+        mainPanel.add(sub_teachers);
+        try {
+            int rekordwybrany = table.getSelectedRow();
+            String teacher = table.getValueAt(rekordwybrany, 1).toString();
+            Connection con = getConnect();
 
+            String querry = "SELECT przedmiot FROM nauczyciele, przedmioty, nauczyciel_przedmiot WHERE nauczyciele.idnauczyciela = nauczyciel_przedmiot.id_nauczyciela AND przedmioty.idprzedmiotu = nauczyciel_przedmiot.id_przedmiotu AND nauczyciele.email = ?";
 
+            PreparedStatement pstmt = con.prepareStatement(querry);
+            pstmt.setString(1, teacher);
+            ResultSet rs = pstmt.executeQuery();
 
+            box3.removeAllItems();
 
+            if (!rs.next()) {
+                JOptionPane.showMessageDialog(null, "Nie znaleziono żadnego dla wybranego nauczyciela przedmiotu");
+            } else {
+                do {
+                    box3.addItem(rs.getString("przedmiot"));
+                } while (rs.next());
+
+                box3.setBounds(1000, 50, 100, 30);
+                mainPanel.add(box3);
+                setVisible(true);
+            }
+subjectsad();
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+    }
+
+    public void subjectsad() {
+        try {
+            Connection con = getConnect();
+            Statement stmt = con.createStatement();
+            String querry = "select przedmiot from przedmioty";
+            ResultSet rs = stmt.executeQuery(querry);
+            box4.removeAllItems();
+            while (rs.next()) {
+                box4.addItem(rs.getString("przedmiot"));
+            }
+            box4.setBounds(1000, 250, 100, 30);
+            mainPanel.add(box4);
+            setVisible(true);
+actionadingsubject();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        }
+    }
+
+    public void actionadingsubject() {
+
+        change_subject = new JButton("add_subject");
+        change_subject.setBounds(850, 250, 150, 30);
+        mainPanel.add(change_subject);
+
+        change_subject.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ew3) {
+
+
+                int rekordwybrany = table.getSelectedRow();
+                String teacher = table.getValueAt(rekordwybrany, 1).toString();
+
+                String na6 = box4.getSelectedItem().toString();
 
 
 
 
+                for(int i =0; i<box3.getItemCount();i++)
+                {
+                    if(box3.getItemAt(i).toLowerCase().contains(na6)){
+                        JOptionPane.showMessageDialog(change_subject, "The teacher have this subject" );
+                        return;
+                    }
+                }
+
+
+
+
+                try {
+
+
+
+
+                    Connection con = getConnect();
+                    Statement stmt = con.createStatement();
+                    String querry = "INSERT INTO nauczyciel_przedmiot (id_nauczyciela,id_przedmiotu) SELECT nauczyciele.idnauczyciela, przedmioty.idprzedmiotu FROM przedmioty,nauczyciele WHERE przedmioty.przedmiot = '" + na6 + "' AND nauczyciele.email = '" + teacher + "' ";
+                    stmt.executeUpdate(querry);
+
+                    con.close();
+                } catch (Exception exception) {
+                    exception.printStackTrace();
+                }
+
+            }
+
+        });
+    }
 }

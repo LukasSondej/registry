@@ -97,8 +97,8 @@ public class Login1 extends JFrame {
 
                     if (searchResult.next()) {
                         String thismail = textField.getText();
-                        ChoseClass choseClass = new ChoseClass();
-                        choseClass.setEmail(thismail);
+                        ChoseClass choseClass = new ChoseClass(thismail);
+choseClass.setEmail(thismail);
                     } else {
                         int len = password.length();
                         if (len == 0) {
@@ -133,6 +133,7 @@ public class Login1 extends JFrame {
                                             String thismail = textField.getText();
                                             TeacherClass teacherClass = new TeacherClass(thismail);
                                             teacherClass.setprzedmiot(przedmiot);
+                                            teacherClass.setemail(thismail);
                                         }
                                     }  catch (SQLException sqlException2) {
                                             sqlException2.printStackTrace();
