@@ -52,6 +52,7 @@ public String email;
             panel.add(button);
         }
 
+        
         panel.setLayout(null);
         add(panel);
         setTitle("Klasy");
