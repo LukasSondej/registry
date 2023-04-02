@@ -44,6 +44,7 @@ public String email;
         }
 
         panel = new JPanel();
+        
         for(int i = 0;i<klasy.size();i++){
             JButton button = new JButton(klasy.get(i));
             button.addActionListener(this);

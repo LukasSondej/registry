@@ -18,6 +18,7 @@ public class AddClassToTeacher extends JFrame {
     private JButton buttonadd = new JButton("Add class");
     JComboBox<String> box = new JComboBox<>();
     JComboBox<String> box3 = new JComboBox<>();
+
     JComboBox<String> box4 = new JComboBox<>();
     JComboBox<String> box5 = new JComboBox<>();
     JPanel mainPanel = new JPanel(null);
