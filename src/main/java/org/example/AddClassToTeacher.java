@@ -306,16 +306,16 @@ actionadingsubject();
                 int rekordwybrany = table.getSelectedRow();
                 String teacher = table.getValueAt(rekordwybrany, 1).toString();
 
-                String na6 = box4.getSelectedItem().toString();
+                String na6 = (String) box4.getSelectedItem();
 
 
 
 
                 for(int i =0; i<box3.getItemCount();i++)
                 {
-                    if(box3.getItemAt(i).toLowerCase().contains(na6)){
+                    if(na6.equals(box3.getItemAt(i))){
                         JOptionPane.showMessageDialog(change_subject, "The teacher have this subject" );
-                        return;
+                return;
                     }
                 }
 
@@ -340,5 +340,7 @@ actionadingsubject();
             }
 
         });
+
     }
+
 }
