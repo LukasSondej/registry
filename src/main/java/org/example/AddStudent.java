@@ -383,7 +383,7 @@ try {
 
         try{
 
-       
+
     String insertQuery6 = "INSERT INTO uczen_rodzic (id_uczen, id_rodzic) values (?, ?)";
     PreparedStatement insertPstmt6 = con1.prepareStatement(insertQuery6);
     insertPstmt6.setInt(1, iducz);

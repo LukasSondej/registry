@@ -10,7 +10,7 @@ import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 public class AddClassToTeacher extends JFrame {
-    JButton agreebutton,dropclasofteacher, addbutton, change_subject;
+    JButton agreebutton,dropclasofteacher, addbutton, change_subject, dropTeacher, drsubject;
     private JTable table;
     private JLabel sub_teachers;
     private DefaultTableModel model;
@@ -56,7 +56,23 @@ public class AddClassToTeacher extends JFrame {
         agreebutton.setBounds(800,20,150,20);
         mainPanel.add(agreebutton);
 
+        dropTeacher = new JButton("drop_teacher");
+        dropTeacher.setBounds(1200, 50, 150, 30);
+        mainPanel.add(dropTeacher);
 
+
+
+
+
+        dropTeacher.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ew3) {
+drop_teacher();
+
+            }
+
+        });
+
+        loadTeachers();
 
         getContentPane().add(mainPanel);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -78,7 +94,7 @@ public class AddClassToTeacher extends JFrame {
        
 
                 classesad();
-
+dropSubject();
                     actionading();
                     classes();
 
@@ -88,15 +104,15 @@ public class AddClassToTeacher extends JFrame {
             }
         });
 
-        loadTeachers();
+
 
     }
     public void loadTeachers() {
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/diary3", "root", "Rafalek");
-            Statement stmt = conn.createStatement();
+            Connection con = getConnect();
+            Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT imie, email FROM nauczyciele");
+
             while (rs.next()) {
                 String name = rs.getString("imie");
                 String email = rs.getString("email");
@@ -106,7 +122,7 @@ public class AddClassToTeacher extends JFrame {
             }
             rs.close();
             stmt.close();
-            conn.close();
+            con.close();
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex.getMessage());
         }
@@ -168,6 +184,7 @@ public class AddClassToTeacher extends JFrame {
             String querry = "DELETE FROM nauczyciel_klasa WHERE id_nauczyciela IN (SELECT idnauczyciela FROM nauczyciele WHERE email = '" +teacher + "') AND id_klasy IN ( SELECT idklasy FROM klasy WHERE klasa = '" + na + "')";
             stmt.executeUpdate(querry);
             con.close();
+            classes();
         } catch (Exception exception) {
             exception.printStackTrace();
         }
@@ -231,6 +248,7 @@ public class AddClassToTeacher extends JFrame {
                 stmt.executeUpdate(querry);
 
                 con.close();
+                classes();
             } catch (Exception exception) {
                 exception.printStackTrace();
             }
@@ -241,7 +259,7 @@ public class AddClassToTeacher extends JFrame {
     public void subjects() {
        sub_teachers = new JLabel("subject");
         sub_teachers.setFont(new Font("Tahoma", Font.PLAIN, 22));
-        sub_teachers.setBounds(900, 40, 100, 40);
+        sub_teachers.setBounds(800, 40, 100, 40);
         mainPanel.add(sub_teachers);
         try {
             int rekordwybrany = table.getSelectedRow();
@@ -263,7 +281,7 @@ public class AddClassToTeacher extends JFrame {
                     box3.addItem(rs.getString("przedmiot"));
                 } while (rs.next());
 
-                box3.setBounds(1000, 50, 100, 30);
+                box3.setBounds(900, 50, 100, 30);
                 mainPanel.add(box3);
                 setVisible(true);
             }
@@ -333,6 +351,7 @@ actionadingsubject();
                     stmt.executeUpdate(querry);
 
                     con.close();
+                    subjects();
                 } catch (Exception exception) {
                     exception.printStackTrace();
                 }
@@ -342,5 +361,56 @@ actionadingsubject();
         });
 
     }
+    public void drop_teacher(){
 
+        int rekordwybrany = table.getSelectedRow();
+        String teacher = table.getValueAt(rekordwybrany, 1).toString();
+
+        try {
+
+            Connection con = getConnect();
+            Statement stmt = con.createStatement();
+            String querry = "DELETE FROM nauczyciele WHERE email = '" + teacher + "' ";
+            stmt.executeUpdate(querry);
+
+            con.close();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+        model.removeRow(rekordwybrany);
+
+
+    }
+
+
+public void dropSubject(){
+    drsubject = new JButton("drop_subject");
+    drsubject.setBounds(1010, 50, 150, 30);
+    mainPanel.add(drsubject);
+    drsubject.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent w){
+
+
+
+
+
+            String na = box3.getSelectedItem().toString();
+            int rekordwybrany = table.getSelectedRow();
+            String teacher = table.getValueAt(rekordwybrany, 1).toString();
+
+
+            try {
+                Connection con = getConnect();
+                Statement stmt = con.createStatement();
+                String querry = "DELETE FROM nauczyciel_przedmiot WHERE id_nauczyciela IN (SELECT idnauczyciela FROM nauczyciele WHERE email = '" +teacher + "') AND id_przedmiotu IN ( SELECT idprzedmiotu FROM przedmioty WHERE przedmiot = '" + na + "')";
+                stmt.executeUpdate(querry);
+                con.close();
+                subjects();
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
+        }
+    });
+
+}
 }

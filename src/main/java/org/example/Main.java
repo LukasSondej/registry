@@ -4,6 +4,7 @@ import org.example.Registration;
 
 public class Main {
     public static void main(String[] args) {
-AddStudent student = new AddStudent();
+AddClassToTeacher teacher = new AddClassToTeacher();
+
     }
 }

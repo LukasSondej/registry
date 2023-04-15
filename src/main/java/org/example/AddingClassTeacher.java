@@ -1,5 +1,5 @@
 package org.example;
-import com.mysql.cj.Query;
+/* import com.mysql.cj.Query;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -174,4 +174,4 @@ addclastoteacher();
         }
         }
     }
-
+*/

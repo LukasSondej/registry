@@ -41,7 +41,7 @@ public class AddTeacher extends JFrame {
         lblNewUserRegister.setBounds(362, 52, 325, 50);
         contentPane.add(lblNewUserRegister);
 
-        JLabel lblName = new JLabel("First name");
+        JLabel lblName = new JLabel("name");
         lblName.setFont(new Font("Tahoma", Font.PLAIN, 20));
         lblName.setBounds(58, 152, 99, 43);
         contentPane.add(lblName);
@@ -68,7 +68,7 @@ public class AddTeacher extends JFrame {
         teacher_email.setFont(new Font("Tahoma", Font.PLAIN, 32));
         teacher_email.setBounds(214, 235, 228, 50);
         contentPane.add(teacher_email);
-        teacher_email.setColumns(10);
+
 
 
         JLabel lblPassword = new JLabel("Password");
@@ -85,18 +85,13 @@ public class AddTeacher extends JFrame {
         teacher_telefon.setFont(new Font("Tahoma", Font.PLAIN, 32));
         teacher_telefon.setBounds(707, 243, 228, 50);
         contentPane.add(teacher_telefon);
-        teacher_telefon.setColumns(10);
+
 
         teacher_password = new JPasswordField();
         teacher_password.setFont(new Font("Tahoma", Font.PLAIN, 32));
         teacher_password.setBounds(707, 152, 228, 50);
         contentPane.add(teacher_password);
 
-
-        JLabel lblSubject = new JLabel("Chose_subject");
-        lblSubject.setFont(new Font("Tahoma", Font.PLAIN, 20));
-        lblSubject.setBounds(542, 332, 139, 26);
-        contentPane.add(lblSubject);
 
 
 
@@ -109,7 +104,7 @@ public class AddTeacher extends JFrame {
         resetButton.setFont(new Font("Tahoma", Font.PLAIN, 22));
         resetButton.setBounds(700, 470, 100, 50);
         contentPane.add(resetButton);
-choseSubject();
+
 
         resetButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ew2) {
@@ -130,7 +125,7 @@ choseSubject();
         btnNewButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String firstName = teacher_name.getText();
-                String lastName = teacher_lastname.getText();
+
                 String emailId = teacher_email.getText();
 
                 String mobileNumber = teacher_telefon.getText();
@@ -144,7 +139,7 @@ choseSubject();
                 } else
                     try {
                         Connection con = getConnect();
-                        String searchQuery = "SELECT teacher_email FROM teacher WHERE teacher_email = ?";
+                        String searchQuery = "SELECT email FROM nauczyciele WHERE email = ?";
                         PreparedStatement searchPstmt = con.prepareStatement(searchQuery);
                         searchPstmt.setString(1, emailId);
                         ResultSet searchResult = searchPstmt.executeQuery();
@@ -156,13 +151,13 @@ choseSubject();
                             try {
 
 
-                                String query = "INSERT INTO teacher VALUES (?, ?, ?, ?, ?)";
+                                String query = "INSERT INTO nauczyciele (imie, email, haslo, telefon)VALUES (?, ?, ?, ?)";
                                 PreparedStatement insertPstmt = con.prepareStatement(query);
                                 insertPstmt.setString(1, firstName);
-                                insertPstmt.setString(2, lastName);
-                                insertPstmt.setString(3, mobileNumber);
-                                insertPstmt.setString(4, emailId);
-                                insertPstmt.setString(5, password);
+                                insertPstmt.setString(2, emailId);
+                                insertPstmt.setString(3, password);
+                                insertPstmt.setString(4, mobileNumber);
+
 
                                 insertPstmt.executeUpdate();
                                 JOptionPane.showMessageDialog(btnNewButton, "Great, you registered");
@@ -193,31 +188,7 @@ choseSubject();
         });
 
     }
-    public void choseSubject() {
 
-
-
-
-        try {
-            Connection con = getConnect();
-            Statement stmt = con.createStatement();
-            String querry = "select przedmiot from przedmioty";
-            ResultSet rs = stmt.executeQuery(querry);
-
-            while (rs.next()){
-                box.addItem(rs.getString("przedmiot"));
-            }
-            box.setBounds(707, 332, 228, 50);
-         contentPane.add(box);
-         add(contentPane);
-            setVisible(true);
-        }
-        catch (Exception e){
-
-        }
-
-
-    }
 
     public Connection getConnect() {
         Connection con = null;
