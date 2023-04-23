@@ -97,8 +97,8 @@ public class Login1 extends JFrame {
 
                     if (searchResult.next()) {
                         String thismail = textField.getText();
-                        ChoseClass choseClass = new ChoseClass(thismail);
-choseClass.setEmail(thismail);
+                        TeacherClass teacherClass = new TeacherClass(thismail);
+                        teacherClass.setemail(thismail);
                     } else {
                         int len = password.length();
                         if (len == 0) {
@@ -107,29 +107,41 @@ choseClass.setEmail(thismail);
 
                             try {
 
-                                Connection connection = (Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/diary3",
-                                        "root", "Rafalek");
 
-                                PreparedStatement st = (PreparedStatement) connection
+
+                                PreparedStatement st = (PreparedStatement) con
                                         .prepareStatement("Select email, haslo from nauczyciele where email=? and haslo=?");
 
                                 st.setString(1, email);
                                 st.setString(2, password);
                                 ResultSet rs = st.executeQuery();
                                 if (rs.next()) {
-                                    try {
+           try{
+
+
+               String searchQuery2 = "Select idnauczyciela from nauczyciele where email=?";
+               PreparedStatement searchPstmt2 = con.prepareStatement(searchQuery2);
+               searchPstmt2.setString(1, email);
+               ResultSet s2 = searchPstmt2.executeQuery();
+               while (s2.next()) {
+                   String idteacher = s2.getString("idnauczyciela");
+
+               }
+
+
+               try {
 
 
 
-                                        PreparedStatement st2 = (PreparedStatement) connection
-                                                .prepareStatement("Select przedmiot from przedmioty, nauczyciele where nauczyciele.id_przedmiotu = przedmioty.idprzedmiotu and nauczyciele.email=?");
+                                        PreparedStatement st2 = (PreparedStatement) con
+                                                .prepareStatement("Select przedmiot from przedmioty, nauczyciel_przedmiot, nauczyciele where nauczyciel_przedmiot.id_przedmiotu = przedmioty.idprzedmiotu and nauczyciele.idnauczyciela = nauczyciel_przedmiot.id_nauczyciela and nauczyciele.email=?");
 
                                         st2.setString(1, email);
 
                                         ResultSet rs2 = st2.executeQuery();
                                         if(rs2.next()){
                                             String przedmiot = rs2.getString("przedmiot").toString();
-                                            System.out.println(przedmiot);
+
                                             String thismail = textField.getText();
                                             TeacherClass teacherClass = new TeacherClass(thismail);
                                             teacherClass.setprzedmiot(przedmiot);
@@ -138,7 +150,9 @@ choseClass.setEmail(thismail);
                                     }  catch (SQLException sqlException2) {
                                             sqlException2.printStackTrace();
                                         }
-
+           }  catch (SQLException sqlException2) {
+               sqlException2.printStackTrace();
+           }
 
 
 

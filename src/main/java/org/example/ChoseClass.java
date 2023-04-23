@@ -16,6 +16,7 @@ public class ChoseClass extends JFrame implements ActionListener {
 
     private static final long serialVersionUID = 1L;
 public String email;
+JButton changes;
     public String przedmiot;
     JPanel panel;
     ArrayList<String> klasy;
@@ -29,7 +30,14 @@ public String email;
         return  con;
     }
     public ChoseClass(String email) {
+
+
+
+
         klasy = new ArrayList<String>();
+
+
+
 
         try {
             Connection con = getConnect();
@@ -60,6 +68,16 @@ public String email;
         setResizable(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
+        changes = new JButton("changes");
+        changes.setBounds(20, 20, 150, 30);
+        panel.add(changes);
+        changes.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ew3) {
+                System.out.println("jsldgjls");
+
+            }
+
+        });
         
     }
 

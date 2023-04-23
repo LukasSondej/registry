@@ -45,6 +45,8 @@ public class AddStudent extends JFrame {
     private JTextField student_name;
     public int idpar1;
     public int idpar2;
+   public int iducz;
+   public int idklas;
     public Connection getConnect(){
         Connection con = null;
         try{
@@ -295,14 +297,14 @@ public class AddStudent extends JFrame {
 
 
                             try {
-                                String idklas = "";
+
 String klasaWybrana = box.getSelectedItem().toString();
                                 String searchQuery2 = "SELECT idklasy FROM klasy WHERE klasa = ?";
                                 PreparedStatement searchPstmt2 = con.prepareStatement(searchQuery2);
                                 searchPstmt2.setString(1, klasaWybrana);
                                 ResultSet searchResult2 = searchPstmt2.executeQuery();
 if (searchResult2.next()){
-    idklas = searchResult2.getString("idklasy");
+    idklas = searchResult2.getInt("idklasy");
 }
 
 
@@ -336,17 +338,17 @@ try {
                                 try {
 
 
-                                String insertQuery = "INSERT INTO uczniowie (imie, pesel, email, telefon, id_klasy) values (?, ?, ?, ?, ?)";
+                                String insertQuery = "INSERT INTO uczniowie (imie, pesel, email, telefon) values (?, ?, ?, ?)";
                                 PreparedStatement insertPstmt = con.prepareStatement(insertQuery);
                                 insertPstmt.setString(1, firstName);
                                 insertPstmt.setString(2, peselID);
                                 insertPstmt.setString(3, emailId);
                                 insertPstmt.setString(4, mobileNumber);
-                                insertPstmt.setString(5, idklas);
+
                                 insertPstmt.executeUpdate();
                                     con.close();
                                     try{
-                                        int iducz = 0;
+
                                         Connection con1 = getConnect();
 
                                         String searchQuery3 = "SELECT iducznia FROM uczniowie WHERE pesel = ?";
@@ -381,6 +383,19 @@ try {
 
         }
 
+
+
+
+        try {
+
+            String insertQuery8 = "INSERT INTO uczen_klasa (id_ucznia, id_klasy) values (?, ?)";
+            PreparedStatement insertPstmt8 = con1.prepareStatement(insertQuery8);
+            insertPstmt8.setInt(1, iducz);
+            insertPstmt8.setInt(2, idklas);
+
+
+            insertPstmt8.executeUpdate();
+
         try{
 
 
@@ -413,6 +428,9 @@ try {
 } catch (Exception exception) {
     exception.printStackTrace();
 }
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
     } catch (Exception exception) {
         exception.printStackTrace();
     }

@@ -34,7 +34,7 @@ public class Registration extends JFrame {
     private JButton resetButton;
     public Registration() {
         setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\User\\Desktop\\STDM.jpg"));
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setBounds(450, 190, 1014, 597);
         setResizable(true);
         contentPane = new JPanel();
@@ -48,19 +48,16 @@ public class Registration extends JFrame {
         lblNewUserRegister.setBounds(362, 52, 325, 50);
         contentPane.add(lblNewUserRegister);
 
-        JLabel lblName = new JLabel("First name");
+        JLabel lblName = new JLabel("name_and_last");
         lblName.setFont(new Font("Tahoma", Font.PLAIN, 20));
         lblName.setBounds(58, 152, 99, 43);
         contentPane.add(lblName);
 
-        JLabel lblNewLabel = new JLabel("Last name");
-        lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 20));
-        lblNewLabel.setBounds(58, 243, 110, 29);
-        contentPane.add(lblNewLabel);
+
 
         JLabel lblEmailAddress = new JLabel("Email\r\n address");
         lblEmailAddress.setFont(new Font("Tahoma", Font.PLAIN, 20));
-        lblEmailAddress.setBounds(58, 324, 124, 36);
+        lblEmailAddress.setBounds(58, 250, 124, 36);
         contentPane.add(lblEmailAddress);
 
         teacher_name = new JTextField();
@@ -69,16 +66,12 @@ public class Registration extends JFrame {
         contentPane.add(teacher_name);
         teacher_name.setColumns(10);
 
-        teacher_lastname = new JTextField();
-        teacher_lastname.setFont(new Font("Tahoma", Font.PLAIN, 32));
-        teacher_lastname.setBounds(214, 235, 228, 50);
-        contentPane.add(teacher_lastname);
-        teacher_lastname.setColumns(10);
+
 
         teacher_email = new JTextField();
 
         teacher_email.setFont(new Font("Tahoma", Font.PLAIN, 32));
-        teacher_email.setBounds(214, 320, 228, 50);
+        teacher_email.setBounds(214, 250, 228, 50);
         contentPane.add(teacher_email);
         teacher_email.setColumns(10);
 
@@ -107,10 +100,7 @@ public class Registration extends JFrame {
         contentPane.add(teacher_password);
 
 
-        ButtonLog = new JButton("LOGIN");
-        ButtonLog.setFont(new Font("Tahoma", Font.PLAIN, 22));
-        ButtonLog.setBounds(399, 500, 259, 55);
-        contentPane.add(ButtonLog);
+
 
         resetButton = new JButton("Reset");
         resetButton.setFont(new Font("Tahoma", Font.PLAIN, 22));
@@ -122,7 +112,7 @@ public class Registration extends JFrame {
             public void actionPerformed(ActionEvent ew2) {
                 String def = "";
                 teacher_name.setText(def);
-                teacher_lastname.setText(def);
+
                 teacher_email.setText(def);
                 teacher_telefon.setText(def);
                 teacher_password.setText(def);
@@ -137,7 +127,7 @@ public class Registration extends JFrame {
         btnNewButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String firstName = teacher_name.getText();
-                String lastName = teacher_lastname.getText();
+
                 String emailId = teacher_email.getText();
 
                 String mobileNumber = teacher_telefon.getText();
@@ -151,6 +141,7 @@ public class Registration extends JFrame {
                 }
                 else
                     try {
+
                         Connection con = getConnect();
                         String searchQuery = "SELECT email FROM nauczyciele WHERE email = ?";
                         PreparedStatement searchPstmt = con.prepareStatement(searchQuery);
@@ -164,20 +155,22 @@ public class Registration extends JFrame {
                             try {
 
 
-                                String query = "INSERT INTO nauczyciele VALUES (?, ?, ?, ?, ?)";
+                                String query = "INSERT INTO nauczyciele (imie, email, haslo, telefon) VALUES (?, ?, ?, ?)";
                                 PreparedStatement insertPstmt = con.prepareStatement(query);
                                 insertPstmt.setString(1, firstName);
-                                insertPstmt.setString(2, lastName);
-                                insertPstmt.setString(3, mobileNumber);
-                                insertPstmt.setString(4, emailId);
-                                insertPstmt.setString(5, password);
+                                insertPstmt.setString(2, emailId);
+                                insertPstmt.setString(3, password);
+                                insertPstmt.setString(4, mobileNumber);
+
 
                                 insertPstmt.executeUpdate();
+
                                 JOptionPane.showMessageDialog(btnNewButton, "Great, you registered");
 
                                 con.close();
                             } catch (Exception exception) {
                                 exception.printStackTrace();
+
                             }
                         }
                     } catch(Exception exception){
@@ -190,16 +183,7 @@ public class Registration extends JFrame {
         btnNewButton.setBounds(399, 447, 259, 50);
         contentPane.add(btnNewButton);
 
-        ButtonLog.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent w){
-                if(w.getSource()==ButtonLog){
 
-                    Login1 login1 = new Login1();
-
-                }
-
-            }
-        });
 
     }
 

@@ -26,7 +26,7 @@ public class MainClas extends JFrame  {
     JLabel subjects;
 
     JLabel grad;
-
+public int idoceny;
     String na;
     String na2;
     private JTextField marksad;
@@ -57,7 +57,7 @@ public class MainClas extends JFrame  {
         subjects.setBounds(500, 20, 120, 20);
         agreebutton = new JButton("submit");
         agreebutton.setBounds(315,50,150,20);
-        setTitle("CLASS 1");
+        setTitle("Diary");
         setLayout(null);
         setVisible(true);
         setSize(950,700);
@@ -92,7 +92,7 @@ public class MainClas extends JFrame  {
         try {
             Connection con = getConnect();
             Statement stmt = con.createStatement();
-            String querry = "select imie from uczniowie, uczen_klasa, klasy where uczniowie.id_klasy = uczen_klasa.id_klasy and klasy.idklasy = uczen_klasa.id_klasy and klasy.klasa = '" + klasa + "'";
+            String querry = "select imie from uczniowie, uczen_klasa, klasy where uczniowie.iducznia = uczen_klasa.id_ucznia and klasy.idklasy = uczen_klasa.id_klasy and klasy.klasa = '" + klasa + "'";
             ResultSet rs = stmt.executeQuery(querry);
 
             while (rs.next()){
@@ -182,7 +182,7 @@ if(searchResult.next()){
             Connection con = getConnect();
             Statement stmt = con.createStatement();
 
-            String querry = "select mark from marks,class_1,school_subject where student_name = '" + na5 + "' and type ='"+na6+"' AND marks.idstudent = class_1.idstudent AND marks.idsubject = school_subject.idsubject";
+            String querry = "select mark from marks,uczniowie,przedmioty where uczniowie.imie = '" + na5 + "' and przedmioty.przedmiot ='"+na6+"' AND marks.id_student = uczniowie.iducznia AND marks.id_subject = przedmioty.idprzedmiotu";
             ResultSet rs = stmt.executeQuery(querry);
             box3.removeAllItems();
             while (rs.next()) {
@@ -262,13 +262,14 @@ if(searchResult.next()){
         try {
             Connection con = getConnect();
             Statement stmt = con.createStatement();
-            String querry = "INSERT INTO marks (idstudent, idsubject, mark)SELECT class_1.idstudent, school_subject.idsubject, '" + ma + "' FROM school_subject,class_1 WHERE class_1.student_name = '" + na5 + "' AND school_subject.type = '" + na6 + "' ";
+            String querry = "INSERT INTO marks (id_student, id_subject, mark)SELECT uczniowie.iducznia, przedmioty.idprzedmiotu, '" + ma + "' FROM przedmioty, uczniowie WHERE uczniowie.imie = '" + na5 + "' AND przedmioty.przedmiot = '" + na6 + "' ";
             stmt.executeUpdate(querry);
 
             con.close();
         } catch (Exception exception) {
             exception.printStackTrace();
         }
+        grades();
 
     }
 
@@ -281,14 +282,33 @@ if(searchResult.next()){
 
         try {
             Connection con = getConnect();
-            Statement stmt = con.createStatement();
-            String querry = "DELETE FROM marks WHERE idstudent IN (SELECT idstudent FROM class_1 WHERE student_name = '" + na5 + "') AND idsubject IN (  SELECT idsubject FROM school_subject WHERE type = '" + na6 + "') AND marks.mark = '" + na8 + "' ";
-            stmt.executeUpdate(querry);
+
+            String querry = "Select idmarks FROM marks WHERE id_student IN (SELECT iducznia FROM uczniowie WHERE imie = ?) AND id_subject IN (  SELECT idprzedmiotu FROM przedmioty WHERE przedmiot = ?) AND marks.mark = ?";
+            PreparedStatement searchPstmt8 = con.prepareStatement(querry);
+            searchPstmt8.setString(1, na5);
+            searchPstmt8.setString(2, na6);
+            searchPstmt8.setString(3, na8);
+            ResultSet searchResult8 = searchPstmt8.executeQuery();
+            if (searchResult8.next()) {
+                idoceny = searchResult8.getInt("idmarks");
+
+            }
+
+            try{
+
+
+
+            Statement stmt2 = con.createStatement();
+            String querry2 = "DELETE FROM marks WHERE idmarks = '" + idoceny + "' ";
+            stmt2.executeUpdate(querry2);
             con.close();
         } catch (Exception exception) {
             exception.printStackTrace();
         }
-
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+        grades();
     }
 
 
@@ -303,13 +323,13 @@ if(searchResult.next()){
         try {
             Connection con = getConnect();
             Statement stmt = con.createStatement();
-            String querry = "UPDATE marks SET mark = '" + ma2 + "' WHERE idstudent IN (SELECT idstudent FROM class_1 WHERE student_name = '" + na5 + "') AND idsubject IN (  SELECT idsubject FROM school_subject WHERE type = '" + na6 + "') AND marks.mark = '" + na8 + "' ";
+            String querry = "UPDATE marks SET mark = '" + ma2 + "' WHERE id_student IN (SELECT iducznia FROM uczniowie WHERE imie = '" + na5 + "') AND id_subject IN (  SELECT idprzedmiotu FROM przedmioty WHERE przedmiot = '" + na6 + "') AND marks.mark = '" + na8 + "' ";
             stmt.executeUpdate(querry);
             con.close();
         } catch (Exception exception) {
             exception.printStackTrace();
         }
-
+grades();
     }
 
 }
